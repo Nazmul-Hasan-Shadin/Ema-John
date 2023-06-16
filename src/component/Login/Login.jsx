@@ -67,7 +67,9 @@ signInWithPopup(auth, fbProvider)
     // The signed-in user info.
     const user = result.user;
     console.log(user);
-    
+    setLoggedInUser(user);
+
+    navigate('/shipment');
 
     // This gives you a Facebook Access Token. You can use it to access the Facebook API.
     const credential = FacebookAuthProvider.credentialFromResult(result);
@@ -107,6 +109,8 @@ signInWithPopup(auth, fbProvider)
       photo:''
     }
     setUser(signedOutUser);
+    setLoggedInUser({}); 
+    navigate('/shop');
   })
   .catch(err =>{
     const error=err.message;
