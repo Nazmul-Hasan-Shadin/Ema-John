@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import {Link, Outlet} from 'react-router-dom'
 import { userContext } from '../../App';
-import logo from '../../images/logo.png';
+import logo from '../../images/logo.png'
 import './Header.css'
 
 const Header = () => {
