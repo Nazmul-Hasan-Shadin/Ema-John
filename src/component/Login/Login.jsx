@@ -1,7 +1,7 @@
 import React,{useContext, useState} from 'react';
 import { initializeApp } from 'firebase/app';
 import firebaseConfig from './firebase.config';
-import { GoogleAuthProvider,getAuth,signInWithPopup,signOut ,createUserWithEmailAndPassword, signInWithEmailAndPassword,updateProfile,FacebookAuthProvider } from "firebase/auth";
+import { GoogleAuthProvider,getAuth,signInWithPopup,sendPasswordResetEmail ,signOut,sendEmailVerification  ,createUserWithEmailAndPassword, signInWithEmailAndPassword,updateProfile,FacebookAuthProvider } from "firebase/auth";
 import { userContext } from '../../App';
 import { useNavigate } from 'react-router-dom';
 
@@ -167,6 +167,7 @@ if( newUser && user.name && user.password){
     setUser(newUserInfo);
     
     updateUserName(user.name);
+    verifyEmail();
     
     
     // ...
@@ -237,10 +238,43 @@ const updateUserName= name =>{
 
 }
 
+const verifyEmail=()=>{
+
+  const auth = getAuth();
+  sendEmailVerification(auth.currentUser)
+    .then(() => {
+      // Email verification sent!
+      // ...
+    });
+
+
+
+}
+const resetPassword=email=>{
+
+  const auth = getAuth();
+  sendPasswordResetEmail(auth, email)
+    .then(() => {
+      // Password reset email sent!
+      // ..
+    })
+    .catch((error) => {
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      console.log(errorMessage);
+      // ..
+    });
+
+
+
+}
+
+
+
 
 
   return (
-    <div className=''>
+    <div className='login-container'>
    { user.isSignedIn ? <button onClick={handleSignOut}> Sign Out</button>:<button onClick={handleSignIn}> Sign In</button>
    
    }
@@ -255,10 +289,6 @@ br
       </div>
     }
 
-      <h1>Our Own Authentication</h1>
-      <p>Email: {user.email}</p>
-      <p>password:{user.password}</p>
-      <p>name: {user.name}</p>
 
 
 
@@ -271,6 +301,9 @@ br
       <input type="password" name="password" onBlur={handleChange} placeholder='your password' required/><br />
       <button >Submit</button>
       </form>
+
+   <button onClick={()=>resetPassword(user.email)}>Forget Or Reset Password</button>
+
     <p style={{color:'red'}}>{user.error}</p>
     {
       user.success && <p style={{color:'green'}}>User {newUser?"created":"logged In"} Succesfully</p>
